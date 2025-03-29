@@ -16,7 +16,6 @@ This project processes raw Yelp dataset JSON files into cleaned, analysis-ready 
 
 - Docker Desktop ([Windows](https://docs.docker.com/desktop/install/windows-install/)/[Mac](https://docs.docker.com/desktop/install/mac-install/))
 - 8GB+ RAM recommended
-- Python 3.8+ (for local testing)
 - Git
 
 ## Setup Instructions
@@ -123,6 +122,6 @@ hadoop jar $HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-*.jar \
 ```
 ### Check files were created with no issues
 ```bash
+#There should be 5 items
 hdfs dfs -ls /yelp/output
 ```
-There should be 5 items
