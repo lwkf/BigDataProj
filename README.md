@@ -1,8 +1,8 @@
 # BigDataProj
 
-Hadoop NameNode UI: http://localhost:9870
-Spark Master UI: http://localhost:8080
-Spark Worker UI: http://localhost:8081
+- Hadoop NameNode UI: http://localhost:9870
+- Spark Master UI: http://localhost:8080
+- Spark Worker UI: http://localhost:8081
 
 # Yelp Dataset Analysis with Hadoop/Spark
 
@@ -27,8 +27,8 @@ git clone https://github.com/lwkf/BigDataProj.git
 ```
 
 ### 2. Download Dataset
-Get the Yelp dataset from official source: https://business.yelp.com/data/resources/open-dataset/ 
-Extract the files into ./data folder:
+- Get the Yelp dataset from official source: https://business.yelp.com/data/resources/open-dataset/ 
+- Extract the files into ./data folder:
 ```bash
 data/
 ├── business.json
@@ -67,13 +67,12 @@ docker cp scripts/mappers/checkin_mapper.py namenode:/checkin_mapper.py
 docker cp scripts/reducers/checkin_reducer.py namenode:/checkin_reducer.py
 docker cp scripts/mappers/tip_mapper.py namenode:/tip_mapper.py
 docker cp scripts/reducers/tip_reducer.py namenode:/tip_reducer.py
-
-# Verify files exist
-docker exec -it namenode ls /
 ```
 
 # Verify files exist
+```bash
 docker exec -it namenode ls /
+```
 
 ## Run Cleaning Jobs
 Execute these in separate terminal tabs:
@@ -123,7 +122,7 @@ hadoop jar $HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-*.jar \
     -output /yelp/output/cleaned_tips
 ```
 ### Check files were created with no issues
-There should be 5 items
 ```bash
 hdfs dfs -ls /yelp/output
 ```
+There should be 5 items
