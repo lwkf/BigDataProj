@@ -177,3 +177,25 @@ businessDF.groupBy("city", "state")
   .orderBy($"count".desc)
   .show(10, false)
 ```
+
+## Final Setup
+- 3 Terminal Tabs, one for local, one for namenode, one for spark-master
+- Cleaned Datasets obervable within the namenode terminal using
+```bash
+#There should be 5 items
+hdfs dfs -ls /yelp/output
+```
+- 5 datasets loaded into spark (businessDF, reviewDF, userDF, checkinDF, tipDF)
+
+## Next Steps
+
+- Perform Analysis within Spark
+- Save outputs to a csv to use for visualisation
+- To close docker container run:
+```bash
+docker-compose down  
+```
+- To open docker container again, run:
+```bash
+docker-compose up -d
+```
