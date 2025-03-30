@@ -1,11 +1,30 @@
+# business_reducer.py (Python 2.7 compatible)
 import sys
 import json
 
-current_business = None
+def clean_value(value):
+    if isinstance(value, str) or isinstance(value, unicode):
+        # Remove Python-specific string markers (u')
+        if value.startswith("u'") and value.endswith("'"):
+            return value[2:-1]
+        # Convert string-dicts to actual dicts
+        if value.startswith("{") and value.endswith("}"):
+            try:
+                return json.loads(value.replace("'", "\""))
+            except:
+                return value
+    return value
 
 for line in sys.stdin:
     try:
         business_id, biz_json = line.strip().split('\t', 1)
-        print("{}\t{}".format(business_id, biz_json))
+        biz_data = json.loads(biz_json)
+        
+        # Clean all attributes
+        if 'attributes' in biz_data:
+            biz_data['attributes'] = {k: clean_value(v) for k, v in biz_data['attributes'].items()}
+        
+        # Output pure JSON (no tab separator)
+        print(json.dumps(biz_data))
     except Exception as e:
-        sys.stderr.write("ERROR: {}\n".format(str(e)))
+        sys.stderr.write("ERROR: {}\n".format(str(e)))  # Python 2.7 compatible

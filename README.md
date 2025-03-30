@@ -50,6 +50,28 @@ docker exec -it namenode bash
 # Inside container:
 hdfs dfs -mkdir -p /yelp/input
 hdfs dfs -put /data/*.json /yelp/input/
+
+# Install Python
+# Backup current sources list
+cp /etc/apt/sources.list /etc/apt/sources.list.bak
+
+# Update to use the archived repositories for Debian Stretch
+echo "deb http://archive.debian.org/debian stretch main contrib non-free" > /etc/apt/sources.list
+echo "deb http://archive.debian.org/debian-security stretch/updates main contrib non-free" >> /etc/apt/sources.list
+
+# Add [check-valid-until=no] to prevent expiration errors
+echo "Acquire::Check-Valid-Until \"false\";" > /etc/apt/apt.conf.d/10-nocheckvalid
+echo "APT::Get::Assume-Yes \"true\";" >> /etc/apt/apt.conf.d/10-nocheckvalid
+echo "APT::Get::AllowUnauthenticated \"true\";" >> /etc/apt/apt.conf.d/10-nocheckvalid
+
+apt-get update
+apt-get install -y python3
+
+# Verify Python Installation
+python3 --version
+
+# Create a Python Symlink
+ln -s /usr/bin/python3 /usr/bin/python
 ```
 
 ## Install Mappers/Reducers
@@ -127,4 +149,22 @@ docker exec -it spark-master bash
 
 #Run PySpark
 /spark/bin/spark-shell --master spark://spark-master:7077
+```
+
+### Load Cleaned Datasets to Spark
+```bash
+val businessDF = spark.read.json("hdfs://namenode:9000/yelp/output/cleaned_business")
+val reviewDF = spark.read.json("hdfs://namenode:9000/yelp/output/cleaned_reviews")
+val userDF = spark.read.json("hdfs://namenode:9000/yelp/output/cleaned_users")
+val checkinDF = spark.read.json("hdfs://namenode:9000/yelp/output/cleaned_checkins")
+val tipDF = spark.read.json("hdfs://namenode:9000/yelp/output/cleaned_tips")
+```
+
+### Sample Spark Analysis
+```bash
+# Top 10 cities with most businesses
+businessDF.groupBy("city", "state")
+  .count()
+  .orderBy($"count".desc)
+  .show(10, false)
 ```
