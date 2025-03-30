@@ -48,7 +48,7 @@ docker-compose up -d
 docker exec -it namenode bash
 ```
 2. Create a directory in the node and copy data files over.
-- NOTE: When `-put` command is executed, `INFO sasl.SaslDataTransferClient: SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false` while be printed periodically until the command finishes execution. This process may take awhile.
+- NOTE: When `-put` command is executed, `INFO sasl.SaslDataTransferClient: SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false` will be printed periodically until the command finishes execution. This process may take awhile as all datasets are being copied from local to the namenode.
 ```bash
 # Inside container:
 hdfs dfs -mkdir -p /yelp/input
