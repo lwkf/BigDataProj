@@ -43,14 +43,19 @@ docker-compose up -d
 ```
 
 ## Data Processing Pipeline
-Load Data to HDFS
+1. Enter namenode terminal
 ```bash
 docker exec -it namenode bash
-
+```
+2. Create a directory in the node and copy data files over.
+<br><b>NOTE: When `-put` command is executed, `INFO sasl.SaslDataTransferClient: SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false` while be printed periodically until the command finishes execution. This process may take awhile.</b>
+```bash
 # Inside container:
 hdfs dfs -mkdir -p /yelp/input
 hdfs dfs -put /data/*.json /yelp/input/
-
+```
+3. Install Python onto the node.
+```
 # Install Python
 # Backup current sources list
 cp /etc/apt/sources.list /etc/apt/sources.list.bak
@@ -69,12 +74,19 @@ apt-get install -y python3
 
 # Verify Python Installation
 python3 --version
-
+```
+4. Create a shortcut (symlink) to point towards the Python executable.
+```
 # Create a Python Symlink
 ln -s /usr/bin/python3 /usr/bin/python
 ```
 
 ## Install Mappers/Reducers
+Exit namenode terminal if you are still in it.
+```bash
+exit
+```
+
 For each file (business_mapper.py, business_reducer.py, etc.):
 ```bash
 # Copy from local to namenode
