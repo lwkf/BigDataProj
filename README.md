@@ -68,11 +68,6 @@ docker cp scripts/mappers/tip_mapper.py namenode:/tip_mapper.py
 docker cp scripts/reducers/tip_reducer.py namenode:/tip_reducer.py
 ```
 
-# Verify files exist
-```bash
-docker exec -it namenode ls /
-```
-
 ## Run Cleaning Jobs
 Execute these in separate terminal tabs:
 ### Business Data

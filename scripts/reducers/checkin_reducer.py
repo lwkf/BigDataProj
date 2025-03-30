@@ -11,14 +11,11 @@ def merge_time_patterns(existing, new):
     if new is None:
         return existing
         
-    # Merge checkin counts
     existing['checkin_count'] += new.get('checkin_count', 0)
     
-    # Merge hour patterns
     for hour, count in new.get('time_patterns', {}).get('hours', {}).items():
         existing['time_patterns']['hours'][hour] = existing['time_patterns']['hours'].get(hour, 0) + count
         
-    # Merge weekday patterns
     for day, count in new.get('time_patterns', {}).get('weekdays', {}).items():
         existing['time_patterns']['weekdays'][day] = existing['time_patterns']['weekdays'].get(day, 0) + count
         

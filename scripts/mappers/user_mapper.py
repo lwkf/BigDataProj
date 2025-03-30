@@ -20,7 +20,7 @@ def calculate_account_age(yelping_since):
     try:
         join_date = datetime.strptime(yelping_since, '%Y-%m-%d')
         delta = datetime.now() - join_date
-        return delta.days // 365  # Return years
+        return delta.days // 365 
     except:
         return 0
 
