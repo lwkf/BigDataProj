@@ -120,3 +120,11 @@ hadoop jar $HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-*.jar \
 #There should be 5 items
 hdfs dfs -ls /yelp/output
 ```
+## To access spark
+```bash
+#Access the Spark master container
+docker exec -it spark-master bash
+
+#Run PySpark
+/spark/bin/spark-shell --master spark://spark-master:7077
+```
