@@ -1,0 +1,8 @@
+flask
+virtualenv
+dash
+pandas
+plotly
+matplotlib
+seaborn
+dash-bootstrap-components
