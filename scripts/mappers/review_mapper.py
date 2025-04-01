@@ -9,9 +9,10 @@ def clean_text(text):
 
 def clean_date(date_str):
     try:
-        return datetime.strptime(date_str, '%Y-%m-%d').strftime('%Y-%m-%d')
+        return datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d')
     except:
-        return '1970-01-01'
+        return None
+
 
 for line in sys.stdin:
     try:
