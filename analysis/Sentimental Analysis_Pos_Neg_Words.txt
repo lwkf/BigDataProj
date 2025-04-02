@@ -1,0 +1,84 @@
+{
+  // Load AFINN into broadcast variable
+  val afinnMap = afinnRDD
+    .map(_.split("\t"))
+    .filter(_.length == 2)
+    .map(parts => (parts(0), parts(1).toInt))
+    .collect()
+    .toMap
+
+  val afinnBroadcast = sc.broadcast(afinnMap)
+
+  // Stopwords (extended)
+  val stopwords = Seq(
+    "the", "and", "you", "for", "are", "but", "not", "your", "this", "that", "with", "have", "from",
+    "they", "their", "will", "would", "there", "were", "just", "then", "about", "been", "what", "when",
+    "them", "it's", "had", "some", "because", "very", "more", "than", "here", "like", "into", "out", "our",
+    "food", "place", "time", "service", "back", "order", "ordered", "even", "only", "could", "over", "said"
+  )
+
+  // UDF to compute AFINN sentiment score
+  val afinnScore = udf { text: String =>
+    val afinn = afinnBroadcast.value
+    text.toLowerCase
+      .split("\\W+")
+      .map(word => afinn.getOrElse(word, 0))
+      .sum
+  }
+
+  // Add sentiment score to DataFrame
+  val reviewScored = reviewDF.withColumn("sentiment_score", afinnScore($"text"))
+
+  // Classify into positive / negative only
+  val reviewLabeled = reviewScored.withColumn("sentiment",
+    when($"sentiment_score" >= 3, "positive")
+      .when($"sentiment_score" <= -3, "negative")
+  )
+
+  val afinn = afinnBroadcast.value
+
+  val words = reviewLabeled
+    .na.drop(Seq("sentiment")) // removes rows that are not positive or negative
+    .select($"sentiment", explode(split(lower(col("text")), "\\W+")).alias("word"))
+    .filter(length($"word") > 3 && !$"word".isin(stopwords: _*))
+    .filter(row => afinn.contains(row.getString(1)) && afinn(row.getString(1)) != 0)
+    .map(row => {
+      val word = row.getString(1)
+      val sentiment = afinn(word) match {
+        case score if score > 0 => "positive"
+        case score if score < 0 => "negative"
+      }
+      (sentiment, word)
+    }).toDF("word_sentiment", "word")
+
+  // Top 100 words for each sentiment
+  val posWords = words.filter($"word_sentiment" === "positive")
+    .groupBy("word").count().orderBy(desc("count"))
+
+  val negWords = words.filter($"word_sentiment" === "negative")
+    .groupBy("word").count().orderBy(desc("count"))
+
+  println("Top Positive Words:")
+  posWords.show(false)
+
+  println("Top Negative Words:")
+  negWords.show(false)
+
+  posWords
+    .coalesce(1)
+    .write
+    .mode("overwrite")
+    .option("header", "true")
+    .csv("hdfs://namenode:9000/user/root/top_words_positive")
+
+  negWords
+    .coalesce(1)
+    .write
+    .mode("overwrite")
+    .option("header", "true")
+    .csv("hdfs://namenode:9000/user/root/top_words_negative")
+
+  println("Exported to HDFS paths:")
+  println(" hdfs://namenode:9000/user/root/top_words_positive")
+  println(" hdfs://namenode:9000/user/root/top_words_negative")
+}

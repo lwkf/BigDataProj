@@ -1,0 +1,48 @@
+{
+  // Load and broadcast AFINN
+  val afinnMap = afinnRDD
+    .map(_.split("\t"))
+    .filter(_.length == 2)
+    .map(parts => (parts(0), parts(1).toInt))
+    .collect()
+    .toMap
+
+  val afinnBroadcast = sc.broadcast(afinnMap)
+
+  // UDF to compute AFINN sentiment score
+  val afinnScore = udf { text: String =>
+    val afinn = afinnBroadcast.value
+    text.toLowerCase
+      .split("\\W+")
+      .map(word => afinn.getOrElse(word, 0))
+      .sum
+  }
+
+  // Add sentiment_score column
+  val reviewScored = reviewDF.withColumn("sentiment_score", afinnScore($"text"))
+
+  // Classify into positive, negative, or neutral
+  val reviewLabeled = reviewScored.withColumn("sentiment",
+    when($"sentiment_score" >= 3, "positive")
+      .when($"sentiment_score" <= -3, "negative")
+      .otherwise("neutral")
+  )
+
+  // Count how many of each sentiment
+  val sentimentDist = reviewLabeled
+    .groupBy("sentiment")
+    .count()
+    .orderBy(desc("count"))
+
+  // Show result
+  println("Sentiment Distribution (based on AFINN score):")
+  sentimentDist.show(false)
+
+  // Export result as CSV
+  sentimentDist
+    .coalesce(1)
+    .write
+    .mode("overwrite")
+    .option("header", "true")
+    .csv("hdfs://namenode:9000/user/root/review_sentimentCounts")
+}

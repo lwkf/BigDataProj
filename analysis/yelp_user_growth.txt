@@ -1,0 +1,25 @@
+## Monthly User Growth (How many people join Yelp every month?)
+{
+//  Safely extract just the date (first 10 characters)
+  val usersWithJoinDate = userDF
+    .withColumn("join_date", substring($"yelping_since", 1, 10))
+    .withColumn("join_year", year(to_date($"join_date", "yyyy-MM-dd")))
+    .withColumn("join_month", month(to_date($"join_date", "yyyy-MM-dd")))
+
+  //  Count new users per month
+  val userJoinTrend = usersWithJoinDate
+    .groupBy("join_year", "join_month")
+    .agg(count("*").alias("new_user_count"))
+    .orderBy("join_year", "join_month")
+
+  println("📈Monthly User Signup Trend:")
+  userJoinTrend.show(false)
+
+  // Save to HDFS
+  userJoinTrend
+    .coalesce(1)
+    .write
+    .mode("overwrite")
+    .option("header", "true")
+    .csv("hdfs://namenode:9000/user/root/user_join_trends")
+}

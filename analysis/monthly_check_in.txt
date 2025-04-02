@@ -1,0 +1,25 @@
+## Monthly Check-ins Over Time
+{
+  // Directly explode the array of dates
+  val checkinWithDate = checkinDF
+    .withColumn("date", explode($"dates"))
+    .withColumn("parsed_date", to_timestamp($"date", "yyyy-MM-dd HH:mm:ss"))
+    .withColumn("year", year($"parsed_date"))
+    .withColumn("month", month($"parsed_date"))
+
+  val monthlyCheckinTrends = checkinWithDate
+    .groupBy("year", "month")
+    .agg(count("*").alias("checkin_count"))
+    .orderBy("year", "month")
+
+  println("Monthly Check-in Count by Year:")
+  monthlyCheckinTrends.show(false)
+
+  // Optional: Save to HDFS
+  monthlyCheckinTrends
+    .coalesce(1)
+    .write
+    .mode("overwrite")
+    .option("header", "true")
+    .csv("hdfs://namenode:9000/user/root/checkin_monthly_trends")
+}

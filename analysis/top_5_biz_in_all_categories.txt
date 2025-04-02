@@ -1,0 +1,32 @@
+## Top 5 business in all categories based on rating and review count
+
+{
+import org.apache.spark.sql.expressions.Window
+import org.apache.spark.sql.functions._
+
+val explodedCategories = businessDF
+  .filter(col("categories").isNotNull)
+  .withColumn("category", explode(col("categories")))
+  .withColumn("category", trim(col("category")))
+  .select("business_id", "name", "stars", "review_count", "address", "city", "state", "category") 
+
+val windowSpec = Window
+  .partitionBy("category")
+  .orderBy(col("stars").desc, col("review_count").desc)
+
+val rankedBusinesses = explodedCategories
+  .withColumn("rank", row_number().over(windowSpec))
+  .filter(col("rank") <= 5)
+  .orderBy("category", "rank")
+
+rankedBusinesses
+  .select("category", "name", "stars", "review_count", "address", "city", "state", "rank")
+  .show(truncate = false)
+
+rankedBusinesses
+  .coalesce(1) 
+  .write
+  .option("header", "true")
+  .mode("overwrite")
+  .csv("hdfs://namenode:9000/yelp/output/ranked_Business")
+}

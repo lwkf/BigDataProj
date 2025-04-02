@@ -1,0 +1,24 @@
+## Monthly Review Count
+{
+  // Extract year and month from the review date
+  val reviewWithDate = reviewDF
+    .withColumn("year", year(to_date($"date")))
+    .withColumn("month", month(to_date($"date")))
+
+  // Count reviews by year and month
+  val monthlyReviewCount = reviewWithDate
+    .groupBy("year", "month")
+    .agg(count("*").alias("review_count"))
+    .orderBy("year", "month")
+
+  println("Monthly Review Count Per Year:")
+  monthlyReviewCount.show(false)
+
+  // Optional: Save to HDFS
+  monthlyReviewCount
+    .coalesce(1)
+    .write
+    .mode("overwrite")
+    .option("header", "true")
+    .csv("hdfs://namenode:9000/user/root/monthly_review_counts")
+}

@@ -1,0 +1,24 @@
+## Monthly Tip Count
+{
+  // Extract year and month from tip date
+  val tipsWithDate = tipDF
+    .withColumn("year", year(to_date($"date")))
+    .withColumn("month", month(to_date($"date")))
+
+  // Group by year and month, then count
+  val tipMonthlyTrends = tipsWithDate
+    .groupBy("year", "month")
+    .agg(count("*").alias("tip_count"))
+    .orderBy("year", "month")
+
+  println("Monthly Tip Count by Year:")
+  tipMonthlyTrends.show(false)
+
+  // Optional: Save to HDFS for visualization
+  tipMonthlyTrends
+    .coalesce(1)
+    .write
+    .mode("overwrite")
+    .option("header", "true")
+    .csv("hdfs://namenode:9000/user/root/tip_monthly_trends")
+}

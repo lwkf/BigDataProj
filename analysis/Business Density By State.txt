@@ -1,0 +1,19 @@
+{
+ // Step 1: Group by state and count businesses
+  val businessDensityByState = businessDF
+    .groupBy("state")
+    .agg(count("*").alias("business_count"))
+    .orderBy(desc("business_count"))
+
+  // Step 2: Show result
+  println("Business Density by State:")
+  businessDensityByState.show(false)
+
+  // Step 3: Export to HDFS
+  businessDensityByState
+    .coalesce(1)
+    .write
+    .mode("overwrite")
+    .option("header", "true")
+    .csv("hdfs://namenode:9000/user/root/geo_business_density_state_only")
+}
