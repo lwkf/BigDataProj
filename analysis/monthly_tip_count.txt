@@ -14,7 +14,7 @@
   println("Monthly Tip Count by Year:")
   tipMonthlyTrends.show(false)
 
-  // Optional: Save to HDFS for visualization
+  // Save to HDFS
   tipMonthlyTrends
     .coalesce(1)
     .write
