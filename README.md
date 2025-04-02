@@ -195,7 +195,6 @@ hdfs dfs -ls /yelp/output
 
 - Perform Analysis within Spark
 - Save outputs to a csv to use for visualisation
-- Save outputs to a csv to use for visualisation
 1.  In the Spark Shell, Save the output to HDFS
 ```bash
 # Ensure your Spark DataFrame is saved as a CSV in HDFS
