@@ -51,7 +51,6 @@
       (sentiment, word)
     }).toDF("word_sentiment", "word")
 
-  // Top 100 words for each sentiment
   val posWords = words.filter($"word_sentiment" === "positive")
     .groupBy("word").count().orderBy(desc("count"))
 
