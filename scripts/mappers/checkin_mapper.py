@@ -33,7 +33,7 @@ for line in sys.stdin:
             'business_id': checkin['business_id'],
             'checkin_count': len(dates),
             'time_patterns': analyze_time_patterns(dates),
-            'dates': dates  
+            'date': ",".join(dates)   
         }
 
         print("{}\t{}".format(cleaned['business_id'], json.dumps(cleaned)))
