@@ -39,11 +39,11 @@ def merge_time_patterns(existing, new):
         for day, count in time_patterns.get('weekdays', {}).items():
             existing['weekdays'][str(day)] += int(count)
 
-    # Merge check-in dates
-    new_dates = new.get('dates', [])
-    if isinstance(new_dates, list):
-        existing['dates'].extend(new_dates)
-    
+    date_str = new.get('date', '')
+    if isinstance(date_str, str):
+        dates = [d.strip() for d in date_str.split(',') if d.strip()]
+        existing['dates'].extend(dates)
+
     return existing
 
 for line in sys.stdin:
@@ -79,7 +79,8 @@ for line in sys.stdin:
                         'hours': dict(combined_stats['hours']),
                         'weekdays': dict(combined_stats['weekdays'])
                     },
-                    'dates': combined_stats['dates']
+                    'date': ",".join(combined_stats['dates'])
+
                 }
                 print(json.dumps(output))
 
@@ -103,6 +104,7 @@ if current_business:
             'hours': dict(combined_stats['hours']),
             'weekdays': dict(combined_stats['weekdays'])
         },
-        'dates': combined_stats['dates']
+        'date': ",".join(combined_stats['dates'])
+
     }
     print(json.dumps(output))

@@ -30,6 +30,7 @@ for line in sys.stdin:
         cleaned = {
             'user_id': user['user_id'],
             'name': user.get('name', '').strip(),
+            'yelping_since': user.get('yelping_since', '1970-01-01'),
             'account_age_years': calculate_account_age(user.get('yelping_since', '1970-01-01')),
             'review_count': int(user.get('review_count', 0)),
             'friends': clean_friends(user.get('friends')),

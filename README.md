@@ -26,7 +26,8 @@ git clone https://github.com/lwkf/BigDataProj.git
 ```
 
 ### 2. Download Dataset
-- Get the Yelp dataset from official source: https://business.yelp.com/data/resources/open-dataset/ 
+- Get the Yelp dataset from official source: https://business.yelp.com/data/resources/open-dataset/
+- Get the AFINN-111 text for sentiment analysis from offical source: https://github.com/fnielsen/afinn/blob/master/afinn/data/AFINN-111.txt 
 - Extract the files into ./data folder:
 ```bash
 data/
@@ -34,7 +35,8 @@ data/
 ├── review.json
 ├── user.json
 ├── checkin.json
-└── tip.json
+├── tip.json
+└── AFINN-111.txt
 ```
 
 ### 3. Start Containers
@@ -53,6 +55,7 @@ docker exec -it namenode bash
 # Inside container:
 hdfs dfs -mkdir -p /yelp/input
 hdfs dfs -put /data/*.json /yelp/input/
+hdfs dfs -put data/AFINN-111.txt /yelp/input/
 ```
 3. Install Python onto the node.
 ```bash
@@ -167,6 +170,7 @@ val reviewDF = spark.read.json("hdfs://namenode:9000/yelp/output/cleaned_reviews
 val userDF = spark.read.json("hdfs://namenode:9000/yelp/output/cleaned_users")
 val checkinDF = spark.read.json("hdfs://namenode:9000/yelp/output/cleaned_checkins")
 val tipDF = spark.read.json("hdfs://namenode:9000/yelp/output/cleaned_tips")
+val afinnRDD = spark.sparkContext.textFile("hdfs://namenode:9000/yelp/input/AFINN-111.txt")
 ```
 
 ### Sample Spark Analysis
@@ -191,6 +195,32 @@ hdfs dfs -ls /yelp/output
 
 - Perform Analysis within Spark
 - Save outputs to a csv to use for visualisation
+1.  In the Spark Shell, Save the output to HDFS
+```bash
+# Ensure your Spark DataFrame is saved as a CSV in HDFS
+analysisResult 
+  .coalesce(1) 
+  .write 
+  .option("header", "true") 
+  .mode("overwrite") 
+  .csv("hdfs://namenode:9000/yelp/output/analysis_result")
+```
+2.  In the namenode terminal tab, Retrieve the output from HDFS
+```bash
+# Copy the output file from HDFS to the local machine
+hdfs dfs -get /yelp/output/analysis_result ./output
+```
+3. Locate the CSV File
+```bash
+# Locate the correct file
+find ./output -name "part-*.csv"
+```
+4. Open a new terminal tab and Copy the file from Docker
+```bash
+# Copy the output file to the host machine
+docker cp namenode:/output/part-00000-*.csv ./analysis_output/analysis_result.csv
+```
+Now the retrieved csv file is ready for visualisation.
 - To close docker container run:
 ```bash
 docker-compose down  
@@ -199,6 +229,7 @@ docker-compose down
 ```bash
 docker-compose up -d
 ```
+
 # Starting up Web App for Visualization
 Follow these steps to run the Flask app locally to view some visualizations made with this dataset.
 
