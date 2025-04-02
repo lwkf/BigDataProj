@@ -55,7 +55,7 @@ docker exec -it namenode bash
 # Inside container:
 hdfs dfs -mkdir -p /yelp/input
 hdfs dfs -put /data/*.json /yelp/input/
-hdfs dfs -put /AFINN-111.txt /yelp/input/
+hdfs dfs -put data/AFINN-111.txt /yelp/input/
 ```
 3. Install Python onto the node.
 ```bash
