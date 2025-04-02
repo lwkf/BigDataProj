@@ -14,7 +14,7 @@
   println("Monthly Review Count Per Year:")
   monthlyReviewCount.show(false)
 
-  // Optional: Save to HDFS
+  // Save to HDFS
   monthlyReviewCount
     .coalesce(1)
     .write
