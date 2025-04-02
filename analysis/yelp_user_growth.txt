@@ -1,5 +1,5 @@
-## Monthly User Growth (How many people join Yelp every month?)
-{
+## Monthly User Growth 
+
 //  Safely extract just the date (first 10 characters)
   val usersWithJoinDate = userDF
     .withColumn("join_date", substring($"yelping_since", 1, 10))
@@ -12,7 +12,7 @@
     .agg(count("*").alias("new_user_count"))
     .orderBy("join_year", "join_month")
 
-  println("📈Monthly User Signup Trend:")
+  println("Monthly User Signup Trend:")
   userJoinTrend.show(false)
 
   // Save to HDFS
