@@ -27,7 +27,7 @@ git clone https://github.com/lwkf/BigDataProj.git
 
 ### 2. Download Dataset
 - Get the Yelp dataset from official source: https://business.yelp.com/data/resources/open-dataset/
-- Get the AFINN-111 text from offical source: https://github.com/fnielsen/afinn/blob/master/afinn/data/AFINN-111.txt 
+- Get the AFINN-111 text for sentiment analysis from offical source: https://github.com/fnielsen/afinn/blob/master/afinn/data/AFINN-111.txt 
 - Extract the files into ./data folder:
 ```bash
 data/
