@@ -198,11 +198,11 @@ hdfs dfs -ls /yelp/output
 1. Save the Output to HDFS
 ```bash
 # Ensure your Spark DataFrame is saved as a CSV in HDFS
-analysisResult \
-  .coalesce(1) \
-  .write \
-  .option("header", "true") \
-  .mode("overwrite") \
+analysisResult 
+  .coalesce(1) 
+  .write 
+  .option("header", "true") 
+  .mode("overwrite") 
   .csv("hdfs://namenode:9000/yelp/output/analysis_result")
 ```
 2. Retrieve the Output from HDFS
