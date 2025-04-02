@@ -26,7 +26,8 @@ git clone https://github.com/lwkf/BigDataProj.git
 ```
 
 ### 2. Download Dataset
-- Get the Yelp dataset from official source: https://business.yelp.com/data/resources/open-dataset/ 
+- Get the Yelp dataset from official source: https://business.yelp.com/data/resources/open-dataset/
+- Get the AFINN-111 text from offical source: https://github.com/fnielsen/afinn/blob/master/afinn/data/AFINN-111.txt 
 - Extract the files into ./data folder:
 ```bash
 data/
@@ -34,7 +35,8 @@ data/
 ├── review.json
 ├── user.json
 ├── checkin.json
-└── tip.json
+├── tip.json
+└── AFINN-111.txt
 ```
 
 ### 3. Start Containers
@@ -53,6 +55,7 @@ docker exec -it namenode bash
 # Inside container:
 hdfs dfs -mkdir -p /yelp/input
 hdfs dfs -put /data/*.json /yelp/input/
+hdfs dfs -put /AFINN-111.txt /yelp/input/
 ```
 3. Install Python onto the node.
 ```bash
@@ -167,6 +170,7 @@ val reviewDF = spark.read.json("hdfs://namenode:9000/yelp/output/cleaned_reviews
 val userDF = spark.read.json("hdfs://namenode:9000/yelp/output/cleaned_users")
 val checkinDF = spark.read.json("hdfs://namenode:9000/yelp/output/cleaned_checkins")
 val tipDF = spark.read.json("hdfs://namenode:9000/yelp/output/cleaned_tips")
+val afinnRDD = spark.sparkContext.textFile("hdfs://namenode:9000/yelp/input/AFINN-111.txt")
 ```
 
 ### Sample Spark Analysis
