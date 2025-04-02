@@ -27,7 +27,9 @@ git clone https://github.com/lwkf/BigDataProj.git
 
 ### 2. Download Dataset
 - Get the Yelp dataset from official source: https://business.yelp.com/data/resources/open-dataset/
+
 - Get the AFINN-111 text for sentiment analysis from offical source: https://github.com/fnielsen/afinn/blob/master/afinn/data/AFINN-111.txt 
+
 - Extract the files into ./data folder:
 ```bash
 data/
@@ -163,7 +165,7 @@ docker exec -it spark-master bash
 /spark/bin/spark-shell --master spark://spark-master:7077
 ```
 
-### Load Cleaned Datasets to Spark
+### Load Cleaned Datasets and AFINN-111.txt to Spark
 ```bash
 val businessDF = spark.read.json("hdfs://namenode:9000/yelp/output/cleaned_business")
 val reviewDF = spark.read.json("hdfs://namenode:9000/yelp/output/cleaned_reviews")
