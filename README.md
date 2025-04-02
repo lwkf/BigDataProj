@@ -195,7 +195,7 @@ hdfs dfs -ls /yelp/output
 
 - Perform Analysis within Spark
 - Save outputs to a csv to use for visualisation
-1. Save the Output to HDFS
+1.  In the Spark Shell, save the uutput to HDFS
 ```bash
 # Ensure your Spark DataFrame is saved as a CSV in HDFS
 analysisResult 
@@ -205,7 +205,7 @@ analysisResult
   .mode("overwrite") 
   .csv("hdfs://namenode:9000/yelp/output/analysis_result")
 ```
-2. Retrieve the Output from HDFS
+2.  In the namenode terminal tab, retrieve the output from HDFS
 ```bash
 # Copy the output file from HDFS to the local machine
 hdfs dfs -get /yelp/output/analysis_result ./output
@@ -215,7 +215,7 @@ hdfs dfs -get /yelp/output/analysis_result ./output
 # Locate the correct file
 find ./output -name "part-*.csv"
 ```
-4. Copy the File from Docker
+4. Open a new terminal tab and Copy the file from Docker
 ```bash
 # Copy the output file to the host machine
 docker cp namenode:/output/part-00000-*.csv ./analysis_output/analysis_result.csv
