@@ -12,6 +12,18 @@
 
 
 This project processes raw Yelp dataset JSON files into cleaned, analysis-ready formats using Hadoop MapReduce. The cleaned datasets are then available for further analysis with Spark.
+## Folder Structure
+
+1. analysis/
+   Contains all scripts with Spark commands for analysis in .txt format.
+2. analysis_output/
+   Stores the output dataframes generated from Spark analysis in .csv format.
+3. data/
+   Contains the raw Yelp datasets used for analysis.
+4. scripts/
+   Contains all the Mapper and Reducer programs.
+5. src/
+    Contains the source code for the web application and showcases all the data visualization graphs.
 
 ## Prerequisites
 
