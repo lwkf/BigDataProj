@@ -15,15 +15,15 @@ This project processes raw Yelp dataset JSON files into cleaned, analysis-ready 
 ## Folder Structure
 
 1. analysis/
-   Contains all scripts with Spark commands for analysis in .txt format.
+- Contains all scripts with Spark commands for analysis in .txt format.
 2. analysis_output/
-   Stores the output dataframes generated from Spark analysis in .csv format.
+- Stores the output dataframes generated from Spark analysis in .csv format.
 3. data/
-   Contains the raw Yelp datasets used for analysis.
+- Contains the raw Yelp datasets used for analysis.
 4. scripts/
-   Contains all the Mapper and Reducer programs.
+- Contains all the Mapper and Reducer programs.
 5. src/
-    Contains the source code for the web application and showcases all the data visualization graphs.
+- Contains the source code for the web application and showcases all the data visualization graphs.
 
 ## Prerequisites
 
