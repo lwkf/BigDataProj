@@ -1,5 +1,6 @@
 ## Monthly User Growth 
 
+{
 //  Safely extract just the date (first 10 characters)
   val usersWithJoinDate = userDF
     .withColumn("join_date", substring($"yelping_since", 1, 10))
@@ -23,3 +24,4 @@
     .option("header", "true")
     .csv("hdfs://namenode:9000/user/root/user_join_trends")
 }
+
