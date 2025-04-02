@@ -195,7 +195,7 @@ hdfs dfs -ls /yelp/output
 
 - Perform Analysis within Spark
 - Save outputs to a csv to use for visualisation
-1.  In the Spark Shell, save the uutput to HDFS
+1.  In the Spark Shell, Save the output to HDFS
 ```bash
 # Ensure your Spark DataFrame is saved as a CSV in HDFS
 analysisResult 
@@ -205,7 +205,7 @@ analysisResult
   .mode("overwrite") 
   .csv("hdfs://namenode:9000/yelp/output/analysis_result")
 ```
-2.  In the namenode terminal tab, retrieve the output from HDFS
+2.  In the namenode terminal tab, Retrieve the output from HDFS
 ```bash
 # Copy the output file from HDFS to the local machine
 hdfs dfs -get /yelp/output/analysis_result ./output
