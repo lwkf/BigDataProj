@@ -199,3 +199,21 @@ docker-compose down
 ```bash
 docker-compose up -d
 ```
+# Starting up Web App for Visualization
+Follow these steps to run the Flask app locally to view some visualizations made with this dataset.
+
+## 1. Creating a Virtual Environment (Optional)
+```
+pip install virtualenv
+python -m venv .venv
+source .venv/Scripts/activate
+```
+
+## 2. Installing Requirements
+```
+pip install -r requirements.txt
+```
+## 3. Starting up Flask App
+```
+python src/app.py
+```
