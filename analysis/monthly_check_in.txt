@@ -15,7 +15,7 @@
   println("Monthly Check-in Count by Year:")
   monthlyCheckinTrends.show(false)
 
-  // Optional: Save to HDFS
+  // Save to HDFS
   monthlyCheckinTrends
     .coalesce(1)
     .write
