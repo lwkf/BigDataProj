@@ -27,7 +27,9 @@ git clone https://github.com/lwkf/BigDataProj.git
 
 ### 2. Download Dataset
 - Get the Yelp dataset from official source: https://business.yelp.com/data/resources/open-dataset/
-- Get the AFINN-111 text for sentiment analysis from offical source: https://github.com/fnielsen/afinn/blob/master/afinn/data/AFINN-111.txt
+
+- Get the AFINN-111 text for sentiment analysis from offical source: https://github.com/fnielsen/afinn/blob/master/afinn/data/AFINN-111.txt 
+
 - Extract the files into ./data folder:
 ```bash
 data/
@@ -228,4 +230,23 @@ docker-compose down
 - To open docker container again, run:
 ```bash
 docker-compose up -d
+```
+
+# Starting up Web App for Visualization
+Follow these steps to run the Flask app locally to view some visualizations made with this dataset.
+
+## 1. Creating a Virtual Environment (Optional)
+```
+pip install virtualenv
+python -m venv .venv
+source .venv/Scripts/activate
+```
+
+## 2. Installing Requirements
+```
+pip install -r requirements.txt
+```
+## 3. Starting up Flask App
+```
+python src/app.py
 ```
